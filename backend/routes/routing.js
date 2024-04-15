@@ -1,3 +1,5 @@
+const express = require("express");
+const router = express.Router();
 const userservice = require("../service/users");
 const jwt = require('jsonwebtoken');
 const verifyToken = require("../utilities/verifyToken");
@@ -55,6 +57,16 @@ router.post('/login',(req,res,next)=>{
         next(err)
       })
   }
+})
+
+// api to setup data
+router.get('/setupData',(req,res,next)=>{
+  userservice.setupData().then((data)=>{
+      res.status(200).json(obj)
+      return res.json(obj)
+    }).catch((err)=>{
+      next(err)
+  })
 })
 
 module.exports = router

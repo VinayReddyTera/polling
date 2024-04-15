@@ -18,7 +18,6 @@ const users = Schema({
 
 const nominee = Schema({
     name:String,
-    email:String,
     votes: Number,
     createdOn: {
          type: Date,
