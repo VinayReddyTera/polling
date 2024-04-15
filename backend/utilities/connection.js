@@ -9,7 +9,7 @@ const users = Schema({
     name:String,
     email:String,
     password:String,
-    role:String,
+    role:{type:String, default: 'admin'},
     createdOn: {
          type: Date,
          default: moment().format("YYYY-MM-DD HH:mm:ss")
