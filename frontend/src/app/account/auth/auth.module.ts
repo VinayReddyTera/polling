@@ -7,9 +7,10 @@ import { LoginComponent } from './login/login.component';
 
 import { AuthRoutingModule } from './auth-routing';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent,SignupComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

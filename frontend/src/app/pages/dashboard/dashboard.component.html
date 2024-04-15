@@ -3,10 +3,10 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 font-size-18">{{opr_role}} Dashboard</h4>
+                <h4 class="mb-0 font-size-18">{{role}} Dashboard</h4>
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item active">Welcome to {{opr_role | titlecase}} Dashboard</li>
+                        <li class="breadcrumb-item active">Welcome to {{role | titlecase}} Dashboard</li>
                     </ol>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                         <div class="col-7">
                             <div class="text-primary p-3">
                                 <h5 class="text-primary">Welcome Back !</h5>
-                                <p>{{opr_role | titlecase}} Dashboard</p>
+                                <p>{{role | titlecase}} Dashboard</p>
                             </div>
                         </div>
                         <div class="col-5 align-self-end">
@@ -37,7 +37,7 @@
                                 <img src="assets/images/user.png" alt="" class="img-thumbnail rounded-circle">
                             </div>
                             <h5 class="font-size-15 text-truncate">{{name}}</h5>
-                            <p class="text-muted mb-0 text-truncate">{{opr_role | titlecase}}</p>
+                            <p class="text-muted mb-0 text-truncate">{{role | titlecase}}</p>
                         </div>
 
                         <div class="col-sm-8">
@@ -46,7 +46,7 @@
                               <div class="row">
                                 <div class="col-6">
                                     <h5 class="font-size-15">{{upcoming}}</h5>
-                                    <p class="text-muted mb-0">Upcoming</p>
+                                    <p class="text-muted mb-0">Total Votes</p>
                                 </div>
                                 <div class="col-6">
                                     <h5 class="font-size-15">{{completed}}</h5>
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                                 <div class="mt-4">
-                                    <a class="btn btn-primary btn-sm text-white">{{getDisplayText()}}
+                                    <a class="btn btn-primary btn-sm text-white" (click)="setupData()">Setup Data
                                        <i class="mdi mdi-arrow-right ms-1"></i></a>
                                 </div>
                             </div>

@@ -97,7 +97,7 @@ userDB.setupData = async () => {
   else{
     let res = {
       status : 204,
-      data : "Data already present"
+      data : "Nominees already present"
     }
     return res
   }

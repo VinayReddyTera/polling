@@ -1,0 +1,126 @@
+<div class="account-pages my-5 pt-sm-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card overflow-hidden">
+          <div class="bg-soft bg-primary">
+            <div class="row">
+              <div class="col-7">
+                <div class="text-primary p-4">
+                  <h5 class="text-primary">Register as an Admin</h5>
+                  <p>Register yourself with Polling now.</p>
+                </div>
+              </div>
+              <div class="col-5 align-self-end">
+                <img src="assets/images/profile-img.png" alt="" class="img-fluid">
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-0">
+            <div>
+              <a routerLink="/">
+                <div class="avatar-md profile-user-wid mb-4">
+                  <span class="avatar-title rounded-circle bg-light">
+                    <img src="assets/images/logo.svg" style="scale:1.9;position: relative;top:5px" alt="" class="rounded-circle" height="34">
+                  </span>
+                </div>
+              </a>
+            </div>
+            <div class="p-2">
+
+              <form class="needs-validation" name="signupForm" [formGroup]="signupForm" (ngSubmit)="onSubmit()"
+                novalidate>
+
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+
+                  <input type="text" formControlName="name" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="name"
+                    placeholder="Enter name" />
+
+                  <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                    <div *ngIf="f.name.errors.required">Name is required</div>
+                  </div>
+
+                  <div *ngIf="f.name.errors?.nameError && !f.name.errors?.required && f.name.dirty" class="required-message text-danger">
+                    <small>{{f.name.errors.nameError.message}}</small>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+
+                  <input type="email" formControlName="email" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" id="email" placeholder="Email" />
+                    <div *ngIf="f.email.errors?.required && f.email.dirty" class="required-message text-danger">
+                      <small>Required Field!</small>
+                    </div>
+                    <div *ngIf="f.email.errors?.emailError && !f.email.errors?.required && f.email.dirty" class="required-message text-danger">
+                      <small>{{f.email.errors.emailError.message}}</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="password">Password</label>
+                  <div class="input-group auth-pass-inputgroup">
+                    <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter password"
+                      aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+  
+                    <button class="btn btn-light ms-0" type="button" id="cPassword-addon" (click)="togglePasswordVisibility()">
+                      <i class="mdi mdi-eye" *ngIf="!showPassword"></i>
+                      <i class="mdi mdi-eye-off" *ngIf="showPassword"></i>
+                    </button>
+                    </div>
+                    <div *ngIf="f.password.errors?.required && f.password.dirty" class="text-danger">
+                      <small>Required Field!</small>
+                     </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password">Confirm Password</label>
+                    <div class="input-group auth-pass-inputgroup">
+                      <input type="password" id="cPassword" class="form-control" formControlName="cPassword" placeholder="Enter password"
+                        aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && f.cPassword.errors }">
+  
+                      <button class="btn btn-light ms-0" type="button" id="password-addon" (click)="toggleConfirmPasswordVisibility()">
+                        <i class="mdi mdi-eye" *ngIf="!showConfirmPassword"></i>
+                        <i class="mdi mdi-eye-off" *ngIf="showConfirmPassword"></i>
+                      </button>
+                      </div>
+                      <div *ngIf="f.cPassword.errors?.required && f.cPassword.dirty" class="text-danger">
+                        <small>Required Field!</small>
+                        </div>
+                        <div *ngIf="signupForm.errors?.passwordError && !f.cPassword.errors?.required && f.cPassword.dirty" class="required-message text-danger">
+                        <small>{{signupForm.errors.passwordError.message}}</small>
+                      </div>
+                </div>
+
+                <div class="mt-4 d-grid">
+                  <button class="btn btn-primary" type="submit">Register</button>
+                </div>
+                <div class="mt-4 text-center">
+                  <p class="mb-0">By registering you agree to the Polling 
+                    <a class="text-primary">Terms of
+                      Use</a></p>
+                </div>
+                <div class="mt-4 text-center">
+                  <p *ngIf="successMessage" class="mb-0 text-success font-weight-bold">{{successMessage}}</p>
+                  <p *ngIf="errorMessage" class="mb-0 text-danger font-weight-bold">{{errorMessage}}</p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- end card -->
+
+        <div class="mt-5 text-center">
+          <p>Back to <a routerLink="/account/login" class="fw-medium text-primary"> Login</a>
+          </p>
+          <!-- <p>© {{year}} Artlist.</p> -->
+        </div>
+      </div> <!-- end col -->
+    </div>
+    <!-- end row -->
+  </div>
+  <!-- end container -->
+</div>

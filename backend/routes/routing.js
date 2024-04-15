@@ -93,10 +93,21 @@ router.post('/register',(req,res,next)=>{
 router.get('/setupData',(req,res,next)=>{
   userservice.setupData().then((data)=>{
       res.status(200).json(data)
-      return res.json(obj)
+      return
     }).catch((err)=>{
       next(err)
   })
+})
+
+// api to fetch dashboard data
+router.get('/fetchDashboardData',(req,res,next)=>{
+  res.status(200).json({status:204,data:'test'})
+  // userservice.fetchDashboardData().then((data)=>{
+  //     res.status(200).json(data)
+  //     return res.json(obj)
+  //   }).catch((err)=>{
+  //     next(err)
+  // })
 })
 
 module.exports = router

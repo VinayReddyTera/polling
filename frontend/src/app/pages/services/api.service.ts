@@ -34,8 +34,16 @@ export class ApiService {
     return this.http.post(environment.domain+"login",data)
   }
 
-  fetchDashboardData(data : any):Observable<any>{
-    return this.http.post(environment.domain+"fetchDashboardData",data)
+  register(data : any):Observable<any>{
+    return this.http.post(environment.domain+"register",data)
+  }
+
+  setupdata():Observable<any>{
+    return this.http.get(environment.domain+"setupData")
+  }
+
+  fetchDashboardData():Observable<any>{
+    return this.http.get(environment.domain+"fetchDashboardData")
   }
 
   isLoggedIn(){
@@ -45,7 +53,7 @@ export class ApiService {
   getRole(){
     if(localStorage.getItem('data')){
       let data:any = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
-      return data.opr_role
+      return data.role
     }
     else{
       return ''

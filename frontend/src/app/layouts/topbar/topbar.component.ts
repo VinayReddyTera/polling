@@ -24,7 +24,7 @@ export class TopbarComponent implements OnInit {
 
   ngOnInit() {
     let data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
-    this.name = data.first_name;
+    this.name = data.name;
     this.role = data.role;
     this.openMobileMenu = false;
     this.element = document.documentElement;
@@ -38,10 +38,6 @@ export class TopbarComponent implements OnInit {
   logout() {
     localStorage.clear();
     this.router.navigate(['/account/login']);
-  }
-
-  openProfile(){
-    this.router.navigateByUrl(`/profile`)
   }
 
   fullscreen() {

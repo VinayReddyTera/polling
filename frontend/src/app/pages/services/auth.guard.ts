@@ -18,12 +18,12 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot,state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let userRole : any = this.authservice.getRole();
-    let roles = ['admin','user'];
+    let roles = ['admin'];
     if(!roles.includes(userRole)){
       localStorage.clear()
     }
     if(this.authservice.isLoggedIn() == true){
-      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'poll') {
+      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'poll' || route.routeConfig?.path === 'register') {
         this.router.navigateByUrl('/dashboard')
         return false;
       } else {
@@ -48,7 +48,7 @@ export class AuthGuard implements CanActivate {
       }
     }
     else {
-      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'poll') {
+      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'poll' || route.routeConfig?.path === 'register') {
         return true;
       } else {
         this.router.navigateByUrl('/account/login')

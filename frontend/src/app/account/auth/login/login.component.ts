@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
-
 import { Router } from '@angular/router';
-
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/pages/services/api.service';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';
@@ -56,13 +54,10 @@ export class LoginComponent implements OnInit {
     this.submitted = true
     if(this.loginForm.valid){
       this.apiService.initiateLoading(true);
-      let payload = {
-        data : this.loginForm.value
-      }
-      this.apiService.login(payload).subscribe(
+      this.apiService.login(this.loginForm.value).subscribe(
       (res : any)=>{
         console.log(res)
-        if (!res.is_error) {
+        if (res.status == 200) {
           localStorage.clear();
           let now = new Date();
           let time = now.getTime();
@@ -72,25 +67,20 @@ export class LoginComponent implements OnInit {
             time : expireTime
           }
           let data: any = {
-            first_name : res.status[0].first_name,
-            last_name : res.status[0].last_name,
-            email : res.status[0].email,
-            boutique_id : res.status[0].boutique_id,
-            employee_id : res.status[0].employee_id,
-            opr_role : res.status[0].opr_role,
-            boutique_short_name : this.userData.boutique_short_name,
-            boutique_name : this.userData.boutique_name
+            name : res.data.name,
+            email : res.data.email,
+            role : res.data.role
           };
           localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));
           localStorage.setItem('client-token',this.encrypt.enCrypt(JSON.stringify(clientData)));
           localStorage.setItem('token',res.token);
           this.router.navigateByUrl('/dashboard');
         }
-        else if (res.is_error) {
+        else if (res.status == 204) {
           let msgData = {
             severity : "error",
             summary : 'Error',
-            detail : res.status,
+            detail : res.data,
             life : 5000
           }
           this.apiService.sendMessage(msgData);

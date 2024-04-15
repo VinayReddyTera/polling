@@ -22,7 +22,6 @@ export class DashboardComponent implements OnInit{
   }
 
   name : any;
-  statusForm:any;
   @ViewChild('content') content:any;
   public rowSelection: 'single' | 'multiple' = 'multiple';
   userData:any;
@@ -72,7 +71,7 @@ export class DashboardComponent implements OnInit{
     },
   };
 
-  opr_role:any;
+  role:any;
 
   gridApi: any;
   gridApi1: any;
@@ -232,7 +231,6 @@ export class DashboardComponent implements OnInit{
   pagination:any = true;
   completed:any = 0;
   upcoming:any = 0;
-  boutique_id:number|undefined;
 
   constructor(private apiService : ApiService,private fb: FormBuilder,
     private router:Router,private decrypt:EncryptionService) {}
@@ -240,65 +238,64 @@ export class DashboardComponent implements OnInit{
   ngOnInit() {
     if(localStorage.getItem('data')){
       let userData : any = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
-      this.boutique_id = userData.boutique_id;
-      this.name = userData.first_name;
-      this.opr_role = userData.opr_role;
+      this.name = userData.name;
+      this.role = userData.role;
     }
-    this.statusForm = this.fb.group({
-      boutique_id: [this.boutique_id,[Validators.required]],
-      order_id: ['',[Validators.required]],
-      order_status: ['',[Validators.required]],
-      delivery_status: ['',[Validators.required]],
-      payment_status: ['',[Validators.required]]
-    })
-    let payload = {
-      "data" : {
-        "boutique_id": this.boutique_id
-      }
-    }
+    
     this.apiService.initiateLoading(true)
-    this.apiService.fetchDashboardData(payload).subscribe(
+    this.apiService.fetchDashboardData().subscribe(
       (res:any)=>{
-        console.log(res)
-        this.deliveryOrders = res.deliveryOrders;
-        this.paymentPendingOrders = res.paymentPendingOrders;
-        this.statData[0].value = res.todayDeliveriesCount;
-        this.statData[1].value = res.tommorowDeliveriesCount;
-        this.statData[2].value = res.nextweekDeliveriesCount;
-        let labels = Object.keys(res.graphData).reverse();
-        this.lineChartData = {
-          labels: labels,
-          datasets: [
-            {
-              data: Object.values(res.graphData).reverse(),
-              label: 'No. of orders placed',
-              fill: true,
-              tension: 0.5,
-              borderColor: 'black',
-              backgroundColor: 'rgba(255,255,0,0.28)'
-            }
-          ]
-        };
-        if(res.todayDeliveriesCount == 0 && res.tommorowDeliveriesCount == 0 && res.nextweekDeliveriesCount == 0){
-          this.doughnutChartDatasets = null
+        if(res.status == 200){
+          console.log(res)
+          this.deliveryOrders = res.deliveryOrders;
+          this.paymentPendingOrders = res.paymentPendingOrders;
+          this.statData[0].value = res.todayDeliveriesCount;
+          this.statData[1].value = res.tommorowDeliveriesCount;
+          this.statData[2].value = res.nextweekDeliveriesCount;
+          let labels = Object.keys(res.graphData).reverse();
+          this.lineChartData = {
+            labels: labels,
+            datasets: [
+              {
+                data: Object.values(res.graphData).reverse(),
+                label: 'No. of orders placed',
+                fill: true,
+                tension: 0.5,
+                borderColor: 'black',
+                backgroundColor: 'rgba(255,255,0,0.28)'
+              }
+            ]
+          };
+          if(res.todayDeliveriesCount == 0 && res.tommorowDeliveriesCount == 0 && res.nextweekDeliveriesCount == 0){
+            this.doughnutChartDatasets = null
+          }
+          else{
+            this.doughnutChartDatasets = [
+              { 
+                data: [ res.todayDeliveriesCount,res.tommorowDeliveriesCount,
+                  res.nextweekDeliveriesCount ],
+                    backgroundColor: [
+                    '#FFA533',
+                    '#34c38f',
+                    '#1F4C99'
+                  ],
+                  borderColor: [
+                    '#FFA533',
+                    '#34c38f',
+                    '#1F4C99'
+                  ]
+                  }
+            ]; 
+          }
         }
         else{
-          this.doughnutChartDatasets = [
-            { 
-              data: [ res.todayDeliveriesCount,res.tommorowDeliveriesCount,
-                res.nextweekDeliveriesCount ],
-                  backgroundColor: [
-                  '#FFA533',
-                  '#34c38f',
-                  '#1F4C99'
-                ],
-                borderColor: [
-                  '#FFA533',
-                  '#34c38f',
-                  '#1F4C99'
-                ]
-                }
-          ]; 
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
         }
       },
     (err:any)=>{
@@ -309,8 +306,35 @@ export class DashboardComponent implements OnInit{
     })
   }
 
-  getDisplayText(): string {
-    return this.profileStatus == 'Incomplete' ? 'Complete Profile' : 'View Profile';
+  setupData() {
+    this.apiService.initiateLoading(true)
+    this.apiService.setupdata().subscribe(
+      (res:any)=>{
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+        else{
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+    (err:any)=>{
+      console.log(err)
+    }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+    })
   }
 
   onGridReady(params: GridReadyEvent) {
