@@ -1,0 +1,96 @@
+<header id="page-topbar">
+  <div class="navbar-header">
+    <div class="d-flex">
+      <!-- LOGO -->
+      <div class="navbar-brand-box">
+
+        <a routerLink="/" class="logo logo-light" aria-label="Toggle Menu">
+          <span class="logo-sm">
+            <img src="assets/images/logo-light.svg" style="scale: 2;" alt="" height="22">
+          </span>
+          <span class="logo-lg">
+            <img src="assets/images/logo-no-background.png" style="scale: 2.5;" alt="" height="19">
+          </span>
+        </a>
+      </div>
+
+      <button type="button" aria-label="Menu Bar" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn"
+        (click)="toggleMobileMenu($event)">
+        <i class="fa fa-fw fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="d-flex">
+
+      <div class="dropdown d-none d-lg-inline-block ms-1">
+        <button type="button" class="btn header-item noti-icon" data-toggle="fullscreen" (click)="fullscreen()">
+          <i class="bx bx-fullscreen"></i>
+        </button>
+      </div>
+
+      <div class="dropdown d-inline-block" ngbDropdown>
+        <button *ngIf="role == 'user'" type="button" class="btn header-item noti-icon" id="page-header-notifications-dropdown"
+          ngbDropdownToggle>
+          <!-- <i class="bx bx-bell bx-tada"></i> -->
+          <i class="bx bx-bell"></i>
+          <!-- <span class="badge bg-danger rounded-pill">3</span> -->
+        </button>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+          aria-labelledby="page-header-notifications-dropdown" ngbDropdownMenu>
+          <div class="p-3">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="m-0">Notifications </h6>
+                <button type="button" class="btn btn-rounded btn-icon refresh-icon refreshButton" (click)="fetchNotificationData()">
+                  <i class="mdi mdi-refresh edit"></i>
+                </button>
+                <div *ngIf="loading" class="dot-flashing"></div>
+              </div>
+            </div>
+          </div>
+          <ngx-simplebar style="position: relative;">
+            <a *ngFor="let data of notificationData" class="text-reset notification-item">
+              <div class="media">
+                <div class="avatar-xs me-3">
+                  <span class="avatar-title bg-primary rounded-circle font-size-16">
+                    <i class="bx bx-calendar"></i>
+                  </span>
+                </div>
+                <div class="media-body">
+                  <h6 class="mt-0 mb-1">{{data.title}}</h6>
+                  <div class="font-size-12 text-muted">
+                    <p class="mb-1">{{data.text}}</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </ngx-simplebar>
+          <div class="p-2 border-top d-grid" (click)="openDashboard()">
+            <a class="btn btn-sm btn-link font-size-14 text-center seeMore">
+              <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">See more details</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown d-inline-block" ngbDropdown>
+        <button type="button" class="btn header-item" ngbDropdownToggle id="page-header-user-dropdown">
+          <img class="rounded-circle header-profile-user" src="assets/images/user.png" alt="Header Avatar">
+          <span class="d-none d-xl-inline-block ms-1">{{name}}</span>
+          <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+          <a class="dropdown-item"><i class="mdi mdi-face font-size-16 align-middle me-1"></i>
+            {{name}}</a>
+          <a class="dropdown-item" (click)="openProfile()"><i class="bx bx-user font-size-16 align-middle me-1"></i>
+            Profile
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item text-danger" (click)="logout()"><i
+              class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i>LOGOUT</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</header>
