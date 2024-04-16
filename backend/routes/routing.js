@@ -99,6 +99,16 @@ router.get('/setupData',(req,res,next)=>{
   })
 })
 
+// api to fetch nominees
+router.get('/fetchNominees',(req,res,next)=>{
+  userservice.fetchNominees().then((data)=>{
+      res.status(200).json(data)
+      return
+    }).catch((err)=>{
+      next(err)
+  })
+})
+
 // api to fetch dashboard data
 router.get('/fetchDashboardData',(req,res,next)=>{
   res.status(200).json({status:204,data:'test'})

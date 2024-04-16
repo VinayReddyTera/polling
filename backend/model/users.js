@@ -103,4 +103,23 @@ userDB.setupData = async () => {
   }
 }
 
+userDB.fetchNominees = async () => {
+  const collection = await connection.getNominees();
+  let data = await collection.find({},{_id : 0,name:1});
+  if (data.length > 0) {
+    let res = {
+      status : 200,
+      data : data
+    }
+    return res
+  }
+  else{
+    let res = {
+      status : 204,
+      data : "No Nominees present, contact admin"
+    }
+    return res
+  }
+}
+
 module.exports = userDB

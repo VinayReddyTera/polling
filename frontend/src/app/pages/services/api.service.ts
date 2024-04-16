@@ -42,6 +42,10 @@ export class ApiService {
     return this.http.get(environment.domain+"setupData")
   }
 
+  fetchNominees():Observable<any>{
+    return this.http.get(environment.domain+"fetchNominees")
+  }
+
   fetchDashboardData():Observable<any>{
     return this.http.get(environment.domain+"fetchDashboardData")
   }

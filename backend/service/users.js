@@ -34,8 +34,14 @@ userService.register=(data)=>{
     })
 }
 
-userService.setupData=(data)=>{
+userService.setupData=()=>{
   return userDB.setupData().then((data)=>{
+    return data
+  })
+}
+
+userService.fetchNominees=()=>{
+  return userDB.fetchNominees().then((data)=>{
     return data
   })
 }
