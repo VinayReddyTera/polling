@@ -1,6 +1,8 @@
 import { Component, OnInit} from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { EncryptionService } from '../services/encryption.service';
+import { io } from "socket.io-client";
+import { environment } from 'src/environments/environment';
 
 declare const $ : any;
 
@@ -11,6 +13,7 @@ declare const $ : any;
 })
 export class DashboardComponent implements OnInit{
 
+  socket = io(environment.domain);
   userStatistics = {
     inProgress : 0,
     completed : 0,
@@ -60,6 +63,11 @@ export class DashboardComponent implements OnInit{
   constructor(private apiService : ApiService,private decrypt:EncryptionService) {}
 
   ngOnInit() {
+
+    this.socket.on('message', (message) =>{
+      console.log(message);
+    });
+
     if(localStorage.getItem('data')){
       let userData : any = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
       this.name = userData.name;
@@ -73,7 +81,7 @@ export class DashboardComponent implements OnInit{
           console.log(res)
           this.nominees = res.data;
           this.totalCount = res.totalCount;
-          this.setupGraphs(res);
+          this.setupGraphs(res.data);
         }
         else{
           let msgData = {
@@ -157,11 +165,11 @@ export class DashboardComponent implements OnInit{
     })
   }
 
-  setupGraphs(res:any){
+  setupGraphs(data:any){
     let isDataPresent = false;
     let nomineesArray:any = [];
     this.doughnutChartLabels=[];
-    for(let nominee of res.data){
+    for(let nominee of data){
       if(nominee.votes > 0){
         isDataPresent = true;
       }

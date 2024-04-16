@@ -121,7 +121,7 @@ router.get('/fetchNominees',(req,res,next)=>{
 
 // api to poll for nominees
 router.post('/pollNow',(req,res,next)=>{
-  userservice.pollNow(req.body.id).then((data)=>{
+  userservice.pollNow(req.body._id).then((data)=>{
       res.status(200).json(data)
       return
     }).catch((err)=>{

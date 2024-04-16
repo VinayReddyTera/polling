@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/pages/services/api.service';
+import { io } from "socket.io-client";
 
 @Component({
   selector: 'app-poll',
@@ -16,24 +17,27 @@ export class PollComponent implements OnInit {
   year: number = new Date().getFullYear();
   submitted : boolean = false;
   nominees : any;
-  appName:any = environment.appName
+  appName:any = environment.appName;
+  socket = io(environment.domain);
+
   constructor(public router: Router,
     private apiService : ApiService,private fb: FormBuilder) { }
 
   ngOnInit() {
     this.fetchNominees();
     this.pollForm = this.fb.group({
-      id:['',[Validators.required]]
-    })
+      data:['',[Validators.required]]
+    });
   }
 
   poll() {
     console.log(this.pollForm.value)
     if(this.pollForm.valid){
       this.apiService.initiateLoading(true);
-      this.apiService.pollNow(this.pollForm.value).subscribe(
+      this.apiService.pollNow(this.pollForm.value.data).subscribe(
       (res : any)=>{
-        console.log(res)
+        console.log(res);
+        this.socket.emit('message', this.pollForm.value.data);
         if (res.status == 200) {
           let msgData = {
             severity : "success",

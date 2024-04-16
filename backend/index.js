@@ -6,10 +6,29 @@ const router = require('./routes/routing');
 // const myRequestLogger = require('./utilities/requestLogger');
 const cors = require("cors");
 const app = express();
-const path = require('path')
+const path = require('path');
+// const userservice = require('./service/users')
 
 app.use(cors());
 app.use(bodyParser.json());
+
+const httpServer = require('http').createServer(app);
+const io = require('socket.io')(httpServer,{
+  cors : { origin :'*'}
+})
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('message', (message) => {
+    console.log(message)
+    io.emit('message',message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('a user disconnected!');
+  });
+});
 
 app.use(function(req, res, next) {
      res.header("Access-Control-Allow-Origin", "*");
@@ -31,7 +50,8 @@ app.get('*',(req,res)=>{
 })
 
 port = process.env.PORT || 1204;
-app.listen(port);
-console.log(`server listening on port ${port}`);
+httpServer.listen(port,()=>{
+  console.log(`server listening on port ${port}`);
+});
 
 module.exports = app;

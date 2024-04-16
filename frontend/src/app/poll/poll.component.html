@@ -32,12 +32,12 @@
                     <div class="mt-1">
                         <h5 class="font-weight-bold mb-3">Poll Now</h5>
                         <div class="form-check mb-3" *ngFor="let nominee of nominees;let i = index">
-                            <input class="form-check-input" type="radio" name="id" [id]="'formRadios'+i" formControlName="id" [value]="nominee._id">
+                            <input class="form-check-input" type="radio" name="data" [id]="'formRadios'+i" formControlName="data" [value]="nominee">
                             <label class="form-check-label" [for]="'formRadios'+i">
                                 {{nominee.name}}
                             </label>
                         </div>
-                        <div *ngIf="pollForm.controls.id.errors?.required && pollForm.controls.id.dirty" class="required-message text-danger">
+                        <div *ngIf="pollForm.controls.data.errors?.required && pollForm.controls.data.dirty" class="required-message text-danger">
                             <small>Choose at least one person to vote</small>
                         </div>
                     </div>
