@@ -8,7 +8,7 @@
                 <div class="col-7">
                   <div class="text-primary p-4">
                     <h5 class="text-primary">Welcome Back !</h5>
-                    <p>Sign in to view polling results.</p>
+                    <p>Poll Now for your next MAYOR</p>
                   </div>
                 </div>
                 <div class="col-5 align-self-end">
@@ -27,27 +27,23 @@
                 </a>
               </div>
               <div class="p-2">
-                <form class="form-horizontal" [formGroup]="pollForm" (ngSubmit)="login()">
+                <form class="form-horizontal" [formGroup]="pollForm" (ngSubmit)="poll()">
   
-                    <div class="mt-4">
-                        <h5 class="font-size-14 mb-4">Poll Now for your next MAYOR</h5>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="formRadios" id="formRadios1"
-                                checked>
-                            <label class="form-check-label" for="formRadios1">
-                                Form Radio
+                    <div class="mt-1">
+                        <h5 class="font-weight-bold mb-3">Poll Now</h5>
+                        <div class="form-check mb-3" *ngFor="let nominee of nominees;let i = index">
+                            <input class="form-check-input" type="radio" name="id" [id]="'formRadios'+i" formControlName="id" [value]="nominee._id">
+                            <label class="form-check-label" [for]="'formRadios'+i">
+                                {{nominee.name}}
                             </label>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="formRadios" id="formRadios2">
-                            <label class="form-check-label" for="formRadios2">
-                                Form Radio checked
-                            </label>
+                        <div *ngIf="pollForm.controls.id.errors?.required && pollForm.controls.id.dirty" class="required-message text-danger">
+                            <small>Choose at least one person to vote</small>
                         </div>
                     </div>
 
                   <div class="mt-3 d-grid">
-                    <button class="btn btn-primary" type="submit">Log In</button>
+                    <button class="btn btn-primary" type="submit">Poll Now</button>
                   </div>
                   <!-- <div class="mt-4 text-center">
                     <a routerLink="/account/reset-password" class="text-muted"><i class="mdi mdi-lock mr-1"></i> Forgot your password?</a>

@@ -103,9 +103,38 @@ userDB.setupData = async () => {
   }
 }
 
+userDB.clearData = async () => {
+  const collection = await connection.getNominees();
+  let data = await collection.deleteMany({},{_id : 0});
+  if (data.deletedCount == setUpData.length) {
+    let insert = await collection.insertMany(setUpData);
+    if(insert.length == setUpData.length){
+      let res = {
+        status : 200,
+        data : 'Data successfully reset'
+      }
+      return res
+    }
+    else{
+      let res = {
+        status : 204,
+        data : 'Unable cleared data but unable to insert new data'
+      }
+      return res
+    }
+  }
+  else{
+    let res = {
+      status : 204,
+      data : "Unable to reset nominees"
+    }
+    return res
+  }
+}
+
 userDB.fetchNominees = async () => {
   const collection = await connection.getNominees();
-  let data = await collection.find({},{_id : 0,name:1});
+  let data = await collection.find({},{name:1});
   if (data.length > 0) {
     let res = {
       status : 200,
@@ -117,6 +146,52 @@ userDB.fetchNominees = async () => {
     let res = {
       status : 204,
       data : "No Nominees present, contact admin"
+    }
+    return res
+  }
+}
+
+userDB.pollNow = async (id) => {
+  const collection = await connection.getNominees();
+  let data = await collection.updateOne(
+    { _id:new ObjectId(id) },
+    { $inc: { votes: 1 } }
+  );
+  if (data.modifiedCount == 1) {
+    let res = {
+      status : 200,
+      data : 'Successfully took vote'
+    }
+    return res
+  }
+  else{
+    let res = {
+      status : 204,
+      data : "Unable to take vote"
+    }
+    return res
+  }
+}
+
+userDB.fetchDashboardData = async () => {
+  const collection = await connection.getNominees();
+  let data = await collection.find({},{createdOn:0,__v:0});
+  if (data.length > 0) {
+    let totalCount = 0
+    for(let i of data){
+      totalCount += i.votes
+    }
+    let res = {
+      status : 200,
+      data : data,
+      totalCount : totalCount
+    }
+    return res
+  }
+  else{
+    let res = {
+      status : 204,
+      data : "No nominees created yet!"
     }
     return res
   }

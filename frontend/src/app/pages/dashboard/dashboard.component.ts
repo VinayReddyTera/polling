@@ -1,10 +1,6 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { ApiService } from '../services/api.service';
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
-import { Router } from '@angular/router';
 import { EncryptionService } from '../services/encryption.service';
-import { dateRenderer } from '../dateRenderer';
-import { FormBuilder, Validators} from '@angular/forms';
 
 declare const $ : any;
 
@@ -22,45 +18,29 @@ export class DashboardComponent implements OnInit{
   }
 
   name : any;
-  @ViewChild('content') content:any;
-  public rowSelection: 'single' | 'multiple' = 'multiple';
   userData:any;
   errorMessage : any;
-  deliveryOrders:any = [];
-  paymentPendingOrders:any = [];
   tooltipOptions = {
     fitContent : true
   }
   date: Date = new Date();
   profileStatus:any;
   modifiedRows:any=[];
+  totalCount:any = 0;
+  dataPresent:boolean = false;
 
-  statData = [{
-    "icon": "bx bx-calendar-check",
-    "title": "Today's Deliveries",
-    "value": 0,
-    "link": "/jd-details"
-  }, {
-    "icon": "bx bx-calendar",
-    "title": "Tomorrow Deliveries",
-    "value": 0,
-    "link": "/pastResumes"
-  }, {
-    "icon": "bx bx-list-check",
-    "title": "Next Week",
-    "value": 0,
-    "link": "/interviewers"
-  }];
-
-  lineChartData: any;
-  lineChartOptions: any = {
+  barChartOptions: any = {
+    scaleShowVerticalLines: false,
     responsive: true
   };
-  lineChartLegend = true;
+
+  barChartLabels: string[] = ['dd','ff','ff','fff','ff'];
+  barChartLegend: boolean = true;
+  barChartData:any;
   
-  doughnutChartLabels: string[] = [ 'Today Deliveries', 'Tomorrow Deliveries', 'Next Week Deliveries' ];
+  doughnutChartLabels: string[] = [];
   doughnutChartDatasets: any = [
-      { data: [ 0,0,0 ] }
+      { data: [ 0,0,0,0,0 ] }
     ];
 
   doughnutChartOptions: any = {
@@ -72,168 +52,10 @@ export class DashboardComponent implements OnInit{
   };
 
   role:any;
-
-  gridApi: any;
-  gridApi1: any;
-  gridApi2: any;
-
-  dashboardColumnDefs = [
-    {
-      field: "customer_name",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Name",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "relationship_with_user",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Relationship",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
-      width:130
-    },
-    {
-      field: "number_of_items",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "No of Items",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
-      width:130
-    },
-    {
-      field: "design_type",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Design Type",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "comments",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Comments",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "order_status",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Order Status",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if((params.value).toLowerCase() == 'processing'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Processing</span>`;
-            return link
-          }
-          else if((params.value).toLowerCase() == 'inprogress'){
-            let link = `<span class="badge badge-soft-info" style="font-size:13px">Inprogress</span>`;
-            return link
-          }
-          else if((params.value).toLowerCase() == 'completed'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
-            return link
-          }
-          else{
-            return params.value
-          }
-        }
-      }
-    },
-    {
-      field: "order_date",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Order Date",
-      cellRenderer: dateRenderer
-    },
-    {
-      field: "expected_delivery_date",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Delivery Date",
-      cellRenderer: dateRenderer
-    },
-    {
-      field: "actual_delivery_date",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Delivered Date",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "delivery_status",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Delivery Status",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if((params.value).toLowerCase() == 'order placed'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Order Placed</span>`;
-            return link
-          }
-          else if((params.value).toLowerCase() == 'out for delivery'){
-            let link = `<span class="badge badge-soft-info" style="font-size:13px">Out For Delivery</span>`;
-            return link
-          }
-          else if((params.value).toLowerCase() == 'delivered'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Delivered</span>`;
-            return link
-          }
-          else{
-            return params.value  
-          }
-        }
-      }
-    },
-    {
-      field: "payment_status",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Payment Status",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if((params.value).toLowerCase() == 'awaiting payment'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Awaiting Payment</span>`;
-            return link
-          }
-          else if((params.value).toLowerCase() == 'partiallypaid'){
-            let link = `<span class="badge badge-soft-info" style="font-size:13px">Partially Paid</span>`;
-            return link
-          }
-          else if((params.value).toLowerCase() == 'paid'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
-            return link
-          }
-          else if((params.value).toLowerCase() == 'unpaid'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Un Paid</span>`;
-            return link
-          }
-          else{
-            return params.value  
-          }
-        }
-      }
-    }
-  ];
-  defaultColDef : ColDef = {
-    sortable:true,filter:true,resizable:true
-  }
-  pagination:any = true;
   completed:any = 0;
   upcoming:any = 0;
 
-  constructor(private apiService : ApiService,private fb: FormBuilder,
-    private router:Router,private decrypt:EncryptionService) {}
+  constructor(private apiService : ApiService,private decrypt:EncryptionService) {}
 
   ngOnInit() {
     if(localStorage.getItem('data')){
@@ -247,45 +69,57 @@ export class DashboardComponent implements OnInit{
       (res:any)=>{
         if(res.status == 200){
           console.log(res)
-          this.deliveryOrders = res.deliveryOrders;
-          this.paymentPendingOrders = res.paymentPendingOrders;
-          this.statData[0].value = res.todayDeliveriesCount;
-          this.statData[1].value = res.tommorowDeliveriesCount;
-          this.statData[2].value = res.nextweekDeliveriesCount;
-          let labels = Object.keys(res.graphData).reverse();
-          this.lineChartData = {
-            labels: labels,
-            datasets: [
-              {
-                data: Object.values(res.graphData).reverse(),
-                label: 'No. of orders placed',
-                fill: true,
-                tension: 0.5,
-                borderColor: 'black',
-                backgroundColor: 'rgba(255,255,0,0.28)'
-              }
-            ]
-          };
-          if(res.todayDeliveriesCount == 0 && res.tommorowDeliveriesCount == 0 && res.nextweekDeliveriesCount == 0){
-            this.doughnutChartDatasets = null
+          this.totalCount = res.totalCount;
+          let isDataPresent = false;
+          let nomineesArray:any = []
+          for(let nominee of res.data){
+            if(nominee.votes > 0){
+              isDataPresent = true;
+            }
+            nomineesArray.push(nominee.votes);
+            this.doughnutChartLabels.push(nominee.name)
           }
-          else{
+          if(isDataPresent){
+            this.dataPresent = true
             this.doughnutChartDatasets = [
               { 
-                data: [ res.todayDeliveriesCount,res.tommorowDeliveriesCount,
-                  res.nextweekDeliveriesCount ],
+                data: nomineesArray,
                     backgroundColor: [
                     '#FFA533',
                     '#34c38f',
-                    '#1F4C99'
+                    '#1F4C99',
+                    '#8E44AD',
+                    '#FFD700'
                   ],
                   borderColor: [
                     '#FFA533',
                     '#34c38f',
-                    '#1F4C99'
+                    '#1F4C99',
+                    '#8E44AD',
+                    '#FFD700'
                   ]
                   }
-            ]; 
+            ];
+            this.barChartData = [{
+                label: 'Votes Count',
+                data: nomineesArray,
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 205, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                  'rgb(255, 99, 132)',
+                  'rgb(255, 159, 64)',
+                  'rgb(255, 205, 86)',
+                  'rgb(75, 192, 192)',
+                  'rgb(54, 162, 235)'
+                ],
+                borderWidth: 2
+            }];
+            this.barChartLabels = this.doughnutChartLabels
           }
         }
         else{
@@ -337,34 +171,37 @@ export class DashboardComponent implements OnInit{
     })
   }
 
-  onGridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
-  }
-
-  onGridReady1(params: GridReadyEvent) {
-    this.gridApi1 = params.api;
-  }
-
-  onGridReady2(params: GridReadyEvent) {
-    this.gridApi2 = params.api;
-  }
-
-  filter(index :any){
-    if(index == '0'){
-      this.gridApi.setQuickFilter(
-        (document.getElementById('filter-text-box') as HTMLInputElement).value
-      );
+  clearData(){
+    this.apiService.initiateLoading(true)
+    this.apiService.cleardata().subscribe(
+      (res:any)=>{
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+          $(`#resetNominees`).modal('hide');
+          this.ngOnInit();
+        }
+        else{
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+    (err:any)=>{
+      console.log(err)
     }
-    else if(index == '1'){
-      this.gridApi1.setQuickFilter(
-        (document.getElementById('filter-text-box1') as HTMLInputElement).value
-      );
-    }
-    else if(index == '2'){
-      this.gridApi2.setQuickFilter(
-        (document.getElementById('filter-text-box2') as HTMLInputElement).value
-      );
-    }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+    })
   }
 
 }

@@ -45,17 +45,17 @@
 
                               <div class="row">
                                 <div class="col-6">
-                                    <h5 class="font-size-15">{{upcoming}}</h5>
+                                    <h5 class="font-size-15">{{totalCount}}</h5>
                                     <p class="text-muted mb-0">Total Votes</p>
                                 </div>
-                                <div class="col-6">
-                                    <h5 class="font-size-15">{{completed}}</h5>
-                                    <p class="text-muted mb-0">Completed</p>
-                                </div>
                             </div>
-                                <div class="mt-4">
-                                    <a class="btn btn-primary btn-sm text-white" (click)="setupData()">Setup Data
+                                <div class="mt-4 mb-2">
+                                    <a class="btn btn-primary btn-sm text-white" (click)="setupData()">Setup Nominees
                                        <i class="mdi mdi-arrow-right ms-1"></i></a>
+                                </div>
+                                <div>
+                                  <a class="btn btn-danger btn-sm text-white" data-toggle="modal" data-target="#resetNominees">Reset Nominees
+                                    <i class="mdi mdi-arrow-right ms-1"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -64,8 +64,8 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title mb-4">Delivery Statistics</h4>
-                  <canvas *ngIf="doughnutChartDatasets;else elseBlock" baseChart
+                  <h4 class="card-title mb-4">Polling Results</h4>
+                  <canvas *ngIf="dataPresent;else elseBlock" baseChart
                   [labels]="doughnutChartLabels"
                   [datasets]="doughnutChartDatasets"
                   [options]="doughnutChartOptions"
@@ -73,118 +73,50 @@
                   [type]="'doughnut'">
                   </canvas>
                 <ng-template #elseBlock>
-                  <div class="text-center text-success font-weight-bold">No Deliveries</div>
+                  <div class="text-center text-success font-weight-bold">Polling Not Started</div>
                 </ng-template>
                 </div>
             </div>
         </div>
         <div class="col-xl-8">
-          <div class="row">
-            <div *ngFor="let stat of statData" class="col-md-4">
-              <div class="card mini-stats-wid">
-                <div class="card-body">
-                  <div class="media">
-                    <div class="media-body">
-                      <p class="text-muted fw-medium">{{stat.title}}</p>
-                      <h4 class="mb-0">{{stat.value}}</h4>
-                    </div>
-              
-                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary align-self-center">
-                      <span class="avatar-title">
-                        <i class="bx {{stat.icon}} font-size-24"></i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <!-- end card-body -->
-              </div>
-              <!-- end card -->
-            </div>
-          </div>
             <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex flex-wrap">
-                        <h4 class="card-title mb-4">Order Frequency</h4>
+                        <h4 class="card-title mb-4">Polling Results</h4>
                     </div>
-                    <canvas baseChart
-                    [type]="'line'"
-                    [data]="lineChartData"
-                    [options]="lineChartOptions"
-                    [legend]="lineChartLegend">
+                    <canvas *ngIf="dataPresent;else elseBlock1" baseChart
+                    [datasets]="barChartData"
+                    [labels]="barChartLabels"
+                    [options]="barChartOptions"
+                    [legend]="barChartLegend"
+                    [type]="'bar'">
                     </canvas>
+                    <ng-template #elseBlock1>
+                      <div class="text-center text-success font-weight-bold">Polling Not Started</div>
+                    </ng-template>
                 </div>
             </div>
         </div>
     </div>
     <!-- end row -->
 
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="card">
-          <div *ngIf="deliveryOrders.length > 0" class="card-body">
-            <div class="row">
-              <div class="col-6">
-                <h5 class="card-title">Deliveries Today</h5>
-              </div>
-              <div class="offset-2 col-4 mb-2">
-                <input type="text" id="filter-text-box" 
-                placeholder="Filter..." (input)="filter('0')"
-                class="form-control"
-              />
-              </div>
-            </div>
-            <ag-grid-angular
-            style="width: 100%; height: 400px"
-            class="ag-theme-alpine"
-            [rowData]="deliveryOrders"
-            [columnDefs]="dashboardColumnDefs"
-            [pagination]="pagination"
-            [paginationPageSize]="10"
-            [defaultColDef]="defaultColDef"
-            (gridReady)="onGridReady($event)"
-          >
-          </ag-grid-angular>
-          </div>
-          <div *ngIf="deliveryOrders.length == 0" class="card-body">
-            <h4 class="card-title">Deliveries Today</h4>
-            <div class="text-success text-center font-weight-bold">No Deliveries Today</div>
-          </div>
-        </div>
-      </div>
-  </div>
-
-  <div class="row">
-      <div class="col-lg-12">
-        <div class="card">
-          <div *ngIf="paymentPendingOrders.length > 0" class="card-body">
-            <div class="row">
-              <div class="col-6">
-                <h5 class="card-title">Pending Payments</h5>
-              </div>
-              <div class="offset-2 col-4 mb-2">
-                <input type="text" id="filter-text-box2" 
-                placeholder="Filter..." (input)="filter('2')"
-                class="form-control"/>
-              </div>
-            </div>
-            <ag-grid-angular
-            style="width: 100%; height: 400px"
-            class="ag-theme-alpine"
-            [rowData]="paymentPendingOrders"
-            [columnDefs]="dashboardColumnDefs"
-            [pagination]="pagination"
-            [paginationPageSize]="10"
-            [defaultColDef]="defaultColDef"
-            (gridReady)="onGridReady2($event)"
-          >
-          </ag-grid-angular>
-          </div>
-          <div *ngIf="paymentPendingOrders.length == 0" class="card-body">
-            <h4 class="card-title">Pending Payments</h4>
-            <div class="text-success text-center font-weight-bold">No Pending Payments</div>
-          </div>
-        </div>
-      </div>
-  </div>
-
 </div> <!-- container-fluid -->
+
+<div class="modal fade custom-class" id="resetNominees" tabindex="-1" role="dialog" aria-labelledby="resetNominees"
+aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+  <div class="modal-content">
+    <div class="modal-header border-bottom-0">
+      <h5>Sure to reset nominees</h5>
+      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+    </div>
+    <div class="modal-body">
+      <div class="account-pages">
+        <div class="container">
+          <button class="btn btn-danger btn-block" (click)="clearData()">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

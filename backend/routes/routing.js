@@ -99,6 +99,16 @@ router.get('/setupData',(req,res,next)=>{
   })
 })
 
+// api to clear data
+router.delete('/clearData',(req,res,next)=>{
+  userservice.clearData().then((data)=>{
+      res.status(200).json(data)
+      return
+    }).catch((err)=>{
+      next(err)
+  })
+})
+
 // api to fetch nominees
 router.get('/fetchNominees',(req,res,next)=>{
   userservice.fetchNominees().then((data)=>{
@@ -109,15 +119,24 @@ router.get('/fetchNominees',(req,res,next)=>{
   })
 })
 
+// api to poll for nominees
+router.post('/pollNow',(req,res,next)=>{
+  userservice.pollNow(req.body.id).then((data)=>{
+      res.status(200).json(data)
+      return
+    }).catch((err)=>{
+      next(err)
+  })
+})
+
 // api to fetch dashboard data
 router.get('/fetchDashboardData',(req,res,next)=>{
-  res.status(200).json({status:204,data:'test'})
-  // userservice.fetchDashboardData().then((data)=>{
-  //     res.status(200).json(data)
-  //     return res.json(obj)
-  //   }).catch((err)=>{
-  //     next(err)
-  // })
+  userservice.fetchDashboardData().then((data)=>{
+      res.status(200).json(data)
+      return
+    }).catch((err)=>{
+      next(err)
+  })
 })
 
 module.exports = router

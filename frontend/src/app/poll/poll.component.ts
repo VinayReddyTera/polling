@@ -23,19 +23,26 @@ export class PollComponent implements OnInit {
   ngOnInit() {
     this.fetchNominees();
     this.pollForm = this.fb.group({
-      name:['',[Validators.required]]
+      id:['',[Validators.required]]
     })
   }
 
-  login() {
-    this.submitted = true
+  poll() {
+    console.log(this.pollForm.value)
     if(this.pollForm.valid){
       this.apiService.initiateLoading(true);
-      this.apiService.login(this.pollForm.value).subscribe(
+      this.apiService.pollNow(this.pollForm.value).subscribe(
       (res : any)=>{
         console.log(res)
         if (res.status == 200) {
-          
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+          this.pollForm.reset();
         }
         else if (res.status == 204) {
           let msgData = {

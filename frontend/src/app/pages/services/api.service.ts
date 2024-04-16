@@ -42,8 +42,16 @@ export class ApiService {
     return this.http.get(environment.domain+"setupData")
   }
 
+  cleardata():Observable<any>{
+    return this.http.delete(environment.domain+"clearData")
+  }
+
   fetchNominees():Observable<any>{
     return this.http.get(environment.domain+"fetchNominees")
+  }
+
+  pollNow(data:any):Observable<any>{
+    return this.http.post(environment.domain+"pollNow",data)
   }
 
   fetchDashboardData():Observable<any>{
