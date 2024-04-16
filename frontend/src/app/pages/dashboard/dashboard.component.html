@@ -65,13 +65,34 @@
             <div class="card">
                 <div class="card-body">
                   <h4 class="card-title mb-4">Polling Results</h4>
-                  <canvas *ngIf="dataPresent;else elseBlock" baseChart
-                  [labels]="doughnutChartLabels"
-                  [datasets]="doughnutChartDatasets"
-                  [options]="doughnutChartOptions"
-                  [legend]="true"
-                  [type]="'doughnut'">
-                  </canvas>
+                  <div *ngIf="dataPresent;else elseBlock">
+                    <div class="form-check form-switch form-switch-lg mb-3 d-flex justify-content-end">
+                      <input type="checkbox" id="check" checked="" class="form-check-input" (change)="change()">
+                      <label  for="check" class="form-check-label">Table View</label>
+                  </div>
+                    <canvas *ngIf="!showTable" baseChart
+                    [labels]="doughnutChartLabels"
+                    [datasets]="doughnutChartDatasets"
+                    [options]="doughnutChartOptions"
+                    [legend]="true"
+                    [type]="'doughnut'">
+                    </canvas>
+                    
+                    <table *ngIf="showTable" class="table table-striped table-bordered">
+                      <thead class="thead-light">
+                        <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col">Votes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let nominee of nominees;let i = index">
+                          <td>{{nominee.name}}</td>
+                          <td>{{nominee.votes}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 <ng-template #elseBlock>
                   <div class="text-center text-success font-weight-bold">Polling Not Started</div>
                 </ng-template>

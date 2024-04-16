@@ -26,7 +26,6 @@ export class DashboardComponent implements OnInit{
   date: Date = new Date();
   profileStatus:any;
   modifiedRows:any=[];
-  totalCount:any = 0;
   dataPresent:boolean = false;
 
   barChartOptions: any = {
@@ -54,6 +53,9 @@ export class DashboardComponent implements OnInit{
   role:any;
   completed:any = 0;
   upcoming:any = 0;
+  nominees:any;
+  totalCount: any;
+  showTable:boolean = true;
 
   constructor(private apiService : ApiService,private decrypt:EncryptionService) {}
 
@@ -69,58 +71,9 @@ export class DashboardComponent implements OnInit{
       (res:any)=>{
         if(res.status == 200){
           console.log(res)
+          this.nominees = res.data;
           this.totalCount = res.totalCount;
-          let isDataPresent = false;
-          let nomineesArray:any = []
-          for(let nominee of res.data){
-            if(nominee.votes > 0){
-              isDataPresent = true;
-            }
-            nomineesArray.push(nominee.votes);
-            this.doughnutChartLabels.push(nominee.name)
-          }
-          if(isDataPresent){
-            this.dataPresent = true
-            this.doughnutChartDatasets = [
-              { 
-                data: nomineesArray,
-                    backgroundColor: [
-                    '#FFA533',
-                    '#34c38f',
-                    '#1F4C99',
-                    '#8E44AD',
-                    '#FFD700'
-                  ],
-                  borderColor: [
-                    '#FFA533',
-                    '#34c38f',
-                    '#1F4C99',
-                    '#8E44AD',
-                    '#FFD700'
-                  ]
-                  }
-            ];
-            this.barChartData = [{
-                label: 'Votes Count',
-                data: nomineesArray,
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(255, 159, 64, 0.2)',
-                  'rgba(255, 205, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(54, 162, 235, 0.2)'
-                ],
-                borderColor: [
-                  'rgb(255, 99, 132)',
-                  'rgb(255, 159, 64)',
-                  'rgb(255, 205, 86)',
-                  'rgb(75, 192, 192)',
-                  'rgb(54, 162, 235)'
-                ],
-                borderWidth: 2
-            }];
-            this.barChartLabels = this.doughnutChartLabels
-          }
+          this.setupGraphs(res);
         }
         else{
           let msgData = {
@@ -202,6 +155,71 @@ export class DashboardComponent implements OnInit{
     ).add(()=>{
       this.apiService.initiateLoading(false)
     })
+  }
+
+  setupGraphs(res:any){
+    let isDataPresent = false;
+    let nomineesArray:any = [];
+    this.doughnutChartLabels=[];
+    for(let nominee of res.data){
+      if(nominee.votes > 0){
+        isDataPresent = true;
+      }
+      nomineesArray.push(nominee.votes);
+      this.doughnutChartLabels.push(nominee.name)
+    }
+    if(isDataPresent){
+      this.dataPresent = true
+    }
+    this.doughnutChartDatasets = [
+      { 
+        data: nomineesArray,
+            backgroundColor: [
+            '#FFA533',
+            '#34c38f',
+            '#1F4C99',
+            '#8E44AD',
+            '#FFD700'
+          ],
+          borderColor: [
+            '#FFA533',
+            '#34c38f',
+            '#1F4C99',
+            '#8E44AD',
+            '#FFD700'
+          ]
+          }
+    ];
+    this.barChartData = [{
+        label: 'Votes Count',
+        data: nomineesArray,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)'
+        ],
+        borderWidth: 1
+    }];
+    this.barChartLabels = this.doughnutChartLabels
+  }
+
+  change(){
+    let data = (<HTMLInputElement>document.getElementById('check'));
+    if(data.checked){
+      this.showTable = true;
+    }
+    else{
+      this.showTable = false;
+    }
   }
 
 }
