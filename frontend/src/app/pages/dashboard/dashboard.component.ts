@@ -14,21 +14,8 @@ declare const $ : any;
 export class DashboardComponent implements OnInit{
 
   socket = io(environment.domain);
-  userStatistics = {
-    inProgress : 0,
-    completed : 0,
-    rejected : 0
-  }
-
   name : any;
-  userData:any;
   errorMessage : any;
-  tooltipOptions = {
-    fitContent : true
-  }
-  date: Date = new Date();
-  profileStatus:any;
-  modifiedRows:any=[];
   dataPresent:boolean = false;
 
   barChartOptions: any = {
@@ -54,8 +41,6 @@ export class DashboardComponent implements OnInit{
   };
 
   role:any;
-  completed:any = 0;
-  upcoming:any = 0;
   nominees:any;
   totalCount: any;
   showTable:boolean = true;
@@ -66,6 +51,16 @@ export class DashboardComponent implements OnInit{
 
     this.socket.on('message', (message) =>{
       console.log(message);
+      if(this.nominees.length>0){
+        this.totalCount += 1;
+        for(let nominee of this.nominees){
+          if(nominee._id == message._id){
+            nominee.votes += 1;
+            this.setupGraphs(this.nominees)
+            break
+          }
+        }
+      }
     });
 
     if(localStorage.getItem('data')){
