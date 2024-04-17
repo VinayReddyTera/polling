@@ -2,46 +2,44 @@
 
 ## Overview
 
-Provide a brief overview of the project.
-
 ## Frontend (Angular)
 
 ### Installation and Setup
 
-```bash
-# Navigate to the frontend folder of the project
+bash
+### Navigate to the frontend folder of the project
 cd frontend
 
-# Install node modules
+### Install node modules
 npm i
 
-# If installation fails, try:
-# npm i --legacy-peer-deps
+### If installation fails, try:
+npm i --legacy-peer-deps
 
-# Run the Angular application
+### Run the Angular application
 ng serve -o
 
-# Build the Angular project for production
+### Build the Angular project for production
 ng build --configuration=production
 
 ## Backend (Node.js and Express.js)
 
 ### Installation and Setup
 
-# Navigate to the backend folder of the project
+### Navigate to the backend folder of the project
 cd backend
 
-# Install required packages and set up the .env file
+### Install required packages and set up the .env file
 npm i
 
-# Start the backend server
-# If using node:
+### Start the backend server
+### If using node:
 node index.js
 
-# If using nodemon (preferred way, if installed):
+### If using nodemon (preferred way, if installed):
 nodemon index.js
 
-### Database Setup
+## Database Setup
 
 - For the database:
   - If MongoDB is installed locally, use the local MongoDB URL:
@@ -50,7 +48,7 @@ nodemon index.js
     ```
   - Otherwise, use any MongoDB cloud database URL.
 
-### Hosting Frontend with Backend
+## Hosting Frontend with Backend
 
 - You can place the Angular dist folder in the backend folder to serve the frontend Angular app from the backend as well.
 - To do this:
