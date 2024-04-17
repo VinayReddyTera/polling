@@ -32,73 +32,40 @@ export class PollComponent implements OnInit {
   }
 
   poll() {
-    console.log(this.pollForm.value)
     let pollToken = localStorage.getItem('pollToken');
-    console.log(pollToken)
     if(pollToken !== null){
-      let msgData = {
+      let msgData:any = {
         severity : "error",
         summary : 'Error',
-        detail : "Already Voted",
+        detail : "Already Voted,try again in 6 Hours",
         life : 5000
       }
-      this.apiService.sendMessage(msgData);
-      let data = JSON.parse(this.encrypt.deCrypt(pollToken))
-      if((data.key == environment.secretKey) && (data.time>new Date())){
-        return
+      let data:any = ''
+      try{
+        data = this.encrypt.deCrypt(pollToken);
+        if(data>=new Date()){
+          msgData.detail = this.getTimeDifference(data)
+          this.apiService.sendMessage(msgData);
+          return
+        }
+        else if(data<new Date()){
+          localStorage.removeItem('pollToken');
+          this.voteNow();
+        }
+        else{
+          msgData.detail = this.apiService.sendMessage(msgData);
+          this.setPollToken();
+          return
+        }
       }
-      else{
+      catch(err){
+        msgData.detail = this.apiService.sendMessage(msgData);
         this.setPollToken();
         return
       }
     }
     else{
-      if(this.pollForm.valid){
-        this.apiService.initiateLoading(true);
-        this.apiService.pollNow(this.pollForm.value.data).subscribe(
-        (res : any)=>{
-          console.log(res);
-          this.socket.emit('message', this.pollForm.value.data);
-          if (res.status == 200) {
-            let msgData = {
-              severity : "success",
-              summary : 'Success',
-              detail : res.data,
-              life : 5000
-            }
-            this.apiService.sendMessage(msgData);
-            this.pollForm.reset();
-            this.setPollToken()
-          }
-          else if (res.status == 204) {
-            let msgData = {
-              severity : "error",
-              summary : 'Error',
-              detail : res.data,
-              life : 5000
-            }
-            this.apiService.sendMessage(msgData);
-          }
-        },
-        (err:any)=>{
-          this.errorMessage = err.error
-          console.log(err);
-        }
-      ).add(()=>{
-        this.apiService.initiateLoading(false)
-        setTimeout(()=>{
-          this.errorMessage = null;
-        },5000)
-      })
-    }
-    else{
-      const controls = this.pollForm.controls;
-      for (const name in controls) {
-          if (controls[name].invalid) {
-              controls[name].markAsDirty()
-          }
-      }
-    }
+      this.voteNow()
     }
   }
 
@@ -133,11 +100,70 @@ export class PollComponent implements OnInit {
     let now = new Date();
     let time = now.getTime();
     let expireTime = time + 600 * 36000;
-    let pollData = {
-      key : environment.secretKey,
-      time : expireTime
+    let pollData = expireTime
+    localStorage.setItem('pollToken',this.encrypt.enCrypt(pollData));
+  }
+
+  getTimeDifference(timestamp:any){
+    const givenDate = timestamp;
+    const currentDate = new Date();
+
+    // Calculate the time difference in milliseconds
+    const timeDifference = givenDate - currentDate.getTime();
+
+    // Convert milliseconds to hours, minutes, and seconds
+    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    return `Already Voted, vote again in ${hours} hours, ${minutes} minutes, ${seconds} seconds`
+  }
+
+  voteNow(){
+    if(this.pollForm.valid){
+      this.apiService.initiateLoading(true);
+      this.apiService.pollNow(this.pollForm.value.data).subscribe(
+      (res : any)=>{
+        this.socket.emit('message', this.pollForm.value.data);
+        if (res.status == 200) {
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+          this.pollForm.reset();
+          this.setPollToken()
+        }
+        else if (res.status == 204) {
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        this.errorMessage = err.error
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+      setTimeout(()=>{
+        this.errorMessage = null;
+      },5000)
+    })
+  }
+  else{
+    const controls = this.pollForm.controls;
+    for (const name in controls) {
+        if (controls[name].invalid) {
+            controls[name].markAsDirty()
+        }
     }
-    localStorage.setItem('pollToken',this.encrypt.enCrypt(JSON.stringify(pollData)));
+  }
   }
 
 }
