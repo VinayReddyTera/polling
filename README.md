@@ -5,8 +5,7 @@
 ## Frontend (Angular)
 
 ### Installation and Setup
-
-bash
+```
 ### Navigate to the frontend folder of the project
 cd frontend
 
@@ -21,16 +20,17 @@ ng serve -o
 
 ### Build the Angular project for production
 ng build --configuration=production
-
+```
 ## Backend (Node.js and Express.js)
 
 ### Installation and Setup
-
+```
 ### Navigate to the backend folder of the project
 cd backend
 
 ### Install required packages and set up the .env file
 npm i
+refer .envexample file to create .env file in backend folder
 
 ### Start the backend server
 ### If using node:
@@ -38,7 +38,7 @@ node index.js
 
 ### If using nodemon (preferred way, if installed):
 nodemon index.js
-
+```
 ## Database Setup
 
 - For the database:
