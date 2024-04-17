@@ -36,8 +36,10 @@ export class TopbarComponent implements OnInit {
   }
 
   logout() {
-    localStorage.clear();
-    this.router.navigate(['/account/login']);
+    localStorage.removeItem('client-token');
+    localStorage.removeItem('token');
+    localStorage.removeItem('data');
+    this.router.navigate(['/poll']);
   }
 
   fullscreen() {
@@ -73,41 +75,4 @@ export class TopbarComponent implements OnInit {
     }
   }
 
-  fetchNotificationData(){
-    // this.loading = true;
-    // this.apiService.fetchNotificationData().subscribe(
-    //   (res:any)=>{
-    //     if(res.status == 200){
-    //       console.log(res.data)
-    //       this.notificationData = res.data
-    //     }
-    //     else if(res.status == 204){
-    //       // let msgData = {
-    //       //   severity : "error",
-    //       //   summary : 'Error',
-    //       //   detail : res.data,
-    //       //   life : 5000
-    //       // }
-    //       // this.apiService.sendMessage(msgData);
-    //     }
-    //   },
-    //   (err:any)=>{
-    //     console.log(err)
-    //   }
-    // ).add(()=>{
-    //   this.loading = false;
-    // })
-  }
-
-  openDashboard(){
-    if(/dashboard/.test(this.router.url)){
-      const element = document.getElementById("todayEvents");
-      if (element) {
-        this.viewScroller.scrollToAnchor("todayEvents");
-      }
-    }
-    else{
-      this.router.navigateByUrl('dashboard/todayEvents')
-    }
-  }
 }

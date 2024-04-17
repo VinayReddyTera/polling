@@ -20,10 +20,12 @@ export class AuthGuard implements CanActivate {
     let userRole : any = this.authservice.getRole();
     let roles = ['admin'];
     if(!roles.includes(userRole)){
-      localStorage.clear()
+      localStorage.removeItem('client-token');
+      localStorage.removeItem('token');
+      localStorage.removeItem('data');
     }
     if(this.authservice.isLoggedIn() == true){
-      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'poll' || route.routeConfig?.path === 'register') {
+      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'register') {
         this.router.navigateByUrl('/dashboard')
         return false;
       } else {
@@ -41,17 +43,19 @@ export class AuthGuard implements CanActivate {
           return false
         }
         else{
-          localStorage.clear()
-          this.router.navigateByUrl('/account/login')
+          localStorage.removeItem('client-token');
+          localStorage.removeItem('token');
+          localStorage.removeItem('data');
+          this.router.navigateByUrl('/poll')
           return false
         }
       }
     }
     else {
-      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'poll' || route.routeConfig?.path === 'register') {
+      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'register') {
         return true;
       } else {
-        this.router.navigateByUrl('/account/login')
+        this.router.navigateByUrl('/poll')
         return false;
       }
     }

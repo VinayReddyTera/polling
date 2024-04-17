@@ -7,7 +7,6 @@ const router = require('./routes/routing');
 const cors = require("cors");
 const app = express();
 const path = require('path');
-// const userservice = require('./service/users')
 
 app.use(cors());
 app.use(bodyParser.json());

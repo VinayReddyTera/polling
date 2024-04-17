@@ -89,7 +89,9 @@ export class ApiService {
 
   private handleError(err: any): Observable<never> {
     if (err.status === 403 && err.error.message === "User is not authorized to access this resource with an explicit deny") {
-      localStorage.clear();
+      localStorage.removeItem('client-token');
+      localStorage.removeItem('token');
+      localStorage.removeItem('data');
       this.router.navigateByUrl('account/login');
     }
     return throwError(err.statusText);

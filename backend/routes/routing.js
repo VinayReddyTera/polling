@@ -4,6 +4,7 @@ const userservice = require("../service/users");
 const jwt = require('jsonwebtoken');
 const verifyToken = require("../utilities/verifyToken");
 const validate = require("../utilities/validateData");
+const userDB = require('../model/users');
 
 // api to login users
 router.post('/login',(req,res,next)=>{
@@ -90,8 +91,8 @@ router.post('/register',(req,res,next)=>{
 })
 
 // api to setup data
-router.get('/setupData',(req,res,next)=>{
-  userservice.setupData().then((data)=>{
+router.get('/setupData',verifyToken,(req,res,next)=>{
+  userDB.setupData().then((data)=>{
       res.status(200).json(data)
       return
     }).catch((err)=>{
@@ -100,8 +101,8 @@ router.get('/setupData',(req,res,next)=>{
 })
 
 // api to clear data
-router.delete('/clearData',(req,res,next)=>{
-  userservice.clearData().then((data)=>{
+router.delete('/clearData',verifyToken,(req,res,next)=>{
+  userDB.clearData().then((data)=>{
       res.status(200).json(data)
       return
     }).catch((err)=>{
@@ -111,7 +112,7 @@ router.delete('/clearData',(req,res,next)=>{
 
 // api to fetch nominees
 router.get('/fetchNominees',(req,res,next)=>{
-  userservice.fetchNominees().then((data)=>{
+  userDB.fetchNominees().then((data)=>{
       res.status(200).json(data)
       return
     }).catch((err)=>{
@@ -121,7 +122,7 @@ router.get('/fetchNominees',(req,res,next)=>{
 
 // api to poll for nominees
 router.post('/pollNow',(req,res,next)=>{
-  userservice.pollNow(req.body._id).then((data)=>{
+  userDB.pollNow(req.body._id).then((data)=>{
       res.status(200).json(data)
       return
     }).catch((err)=>{
@@ -130,8 +131,8 @@ router.post('/pollNow',(req,res,next)=>{
 })
 
 // api to fetch dashboard data
-router.get('/fetchDashboardData',(req,res,next)=>{
-  userservice.fetchDashboardData().then((data)=>{
+router.get('/fetchDashboardData',verifyToken,(req,res,next)=>{
+  userDB.fetchDashboardData().then((data)=>{
       res.status(200).json(data)
       return
     }).catch((err)=>{

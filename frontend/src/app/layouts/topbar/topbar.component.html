@@ -41,7 +41,7 @@
             <div class="row align-items-center">
               <div class="col">
                 <h6 class="m-0">Notifications </h6>
-                <button type="button" class="btn btn-rounded btn-icon refresh-icon refreshButton" (click)="fetchNotificationData()">
+                <button type="button" class="btn btn-rounded btn-icon refresh-icon refreshButton">
                   <i class="mdi mdi-refresh edit"></i>
                 </button>
                 <div *ngIf="loading" class="dot-flashing"></div>
@@ -65,7 +65,7 @@
               </div>
             </a>
           </ngx-simplebar>
-          <div class="p-2 border-top d-grid" (click)="openDashboard()">
+          <div class="p-2 border-top d-grid">
             <a class="btn btn-sm btn-link font-size-14 text-center seeMore">
               <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">See more details</span>
             </a>

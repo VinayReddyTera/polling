@@ -34,36 +34,6 @@ userService.register=(data)=>{
     })
 }
 
-userService.setupData=()=>{
-  return userDB.setupData().then((data)=>{
-    return data
-  })
-}
-
-userService.clearData=()=>{
-  return userDB.clearData().then((data)=>{
-    return data
-  })
-}
-
-userService.fetchNominees=()=>{
-  return userDB.fetchNominees().then((data)=>{
-    return data
-  })
-}
-
-userService.pollNow=(id)=>{
-  return userDB.pollNow(id).then((data)=>{
-    return data
-  })
-}
-
-userService.fetchDashboardData=()=>{
-  return userDB.fetchDashboardData().then((data)=>{
-    return data
-  })
-}
-
 userService.sendMail=(payload)=>{
   let transporter = nodemailer.createTransport({
       service : 'gmail',

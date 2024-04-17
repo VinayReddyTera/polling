@@ -58,7 +58,9 @@ export class LoginComponent implements OnInit {
       (res : any)=>{
         console.log(res)
         if (res.status == 200) {
-          localStorage.clear();
+          localStorage.removeItem('client-token');
+          localStorage.removeItem('token');
+          localStorage.removeItem('data');
           let now = new Date();
           let time = now.getTime();
           let expireTime = time + 600 * 36000;
