@@ -115,7 +115,21 @@ export class PollComponent implements OnInit {
     const hours = Math.floor(timeDifference / (1000 * 60 * 60));
     const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-    return `Already Voted, vote again in ${hours} hours, ${minutes} minutes, ${seconds} seconds`
+    let result = 'Already Voted, vote again in ';
+
+    if (hours > 0) {
+      result += `${hours}h `;
+    }
+  
+    if (minutes > 0) {
+      result += `${minutes}m `;
+    }
+
+    if (seconds > 0) {
+      result += `${seconds}s`;
+    }
+
+    return result
   }
 
   voteNow(){
