@@ -6,22 +6,30 @@ import { ApiService } from 'src/app/pages/services/api.service';
   selector: 'app-message',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.css'],
-  providers : [MessageService]
+  providers : [MessageService] // Provide MessageService at the component level
 })
 export class MessageComponent implements OnInit {
 
-  constructor(private messageService: MessageService,private apiservice:ApiService) { }
+  constructor(private messageService: MessageService, private apiservice: ApiService) { } // Inject MessageService and ApiService
 
   ngOnInit(): void {
-    this.apiservice.message.subscribe((message:any) => {
-      if(message){
-        this.showmsg(message)
+    // Subscribe to the message service to listen for incoming messages
+    this.apiservice.message.subscribe((message: any) => {
+      if (message) { // If a message is received
+        this.showmsg(message); // Call the showmsg method to display the message
       }
     });
   }
 
-  showmsg(data : any){
-    this.messageService.add({severity:data.severity, summary: data.summary,detail : data.detail ,life:data.life});
+  // Method to display the message using PrimeNG MessageService
+  showmsg(data: any) {
+    // Add the message to the message service with the specified severity, summary, detail, and life span
+    this.messageService.add({ 
+      severity: data.severity, // Severity of the message (e.g., error, warning, success)
+      summary: data.summary, // Summary text of the message
+      detail: data.detail, // Detailed message content
+      life: data.life // Duration in milliseconds for the message to be displayed
+    });
   }
 
 }

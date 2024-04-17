@@ -39,20 +39,19 @@ export class DashboardComponent implements OnInit{
       animateRotate: true
     },
   };
-
   role:any;
-  nominees:any;
+  nominees:any = [];
   totalCount: any;
   showTable:boolean = true;
 
   constructor(private apiService : ApiService,private decrypt:EncryptionService) {}
 
   ngOnInit() {
-
+    // Listen for socket messages, used for live vote counts
     this.socket.on('message', (message) =>{
-      console.log(message);
       if(this.nominees.length>0){
         this.totalCount += 1;
+        // Update nominee votes if present in the current list
         for(let nominee of this.nominees){
           if(nominee._id == message._id){
             nominee.votes += 1;
@@ -63,19 +62,22 @@ export class DashboardComponent implements OnInit{
       }
     });
 
+    // Fetch user data from local storage
     if(localStorage.getItem('data')){
+      // decrypts and parses the object data present in local storage
       let userData : any = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
       this.name = userData.name;
       this.role = userData.role;
     }
     
+    // Api service which is used to fetch dashboard data
     this.apiService.initiateLoading(true)
     this.apiService.fetchDashboardData().subscribe(
       (res:any)=>{
         if(res.status == 200){
-          console.log(res)
           this.nominees = res.data;
           this.totalCount = res.totalCount;
+          // used to initiate graphs
           this.setupGraphs(res.data);
         }
         else{
@@ -96,6 +98,7 @@ export class DashboardComponent implements OnInit{
     })
   }
 
+  // sets up nominee data, if there is no data in db
   setupData() {
     this.apiService.initiateLoading(true)
     this.apiService.setupdata().subscribe(
@@ -127,6 +130,7 @@ export class DashboardComponent implements OnInit{
     })
   }
 
+  // clears or resets nominee data including votes count to zero.
   clearData(){
     this.apiService.initiateLoading(true)
     this.apiService.cleardata().subscribe(
@@ -160,6 +164,7 @@ export class DashboardComponent implements OnInit{
     })
   }
 
+  // At any point of time, with the array of nominee data with names and votes we can initiate graphs
   setupGraphs(data:any){
     let isDataPresent = false;
     let nomineesArray:any = [];
@@ -215,6 +220,7 @@ export class DashboardComponent implements OnInit{
     this.barChartLabels = this.doughnutChartLabels
   }
 
+  // Toggle between chart and table view
   change(){
     let data = (<HTMLInputElement>document.getElementById('check'));
     if(data.checked){

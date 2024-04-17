@@ -1,0 +1,10 @@
+PORT = 8000 (number)
+
+MONGO_URL = 
+
+JWT_Secret = 
+
+# if we want to send mails
+mailId = 
+
+pass = 

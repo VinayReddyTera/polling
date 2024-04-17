@@ -9,7 +9,7 @@ const routes: Routes = [
     component: DashboardComponent,
     canActivate: [AuthGuard],
     data: {
-      role: ['admin','owner','sales','user','access-dashboard']
+      role: ['admin','access-dashboard']
     }
   },
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
     component: DashboardComponent,
     canActivate: [AuthGuard],
     data: {
-      role: ['admin','owner','sales','user','access-dashboard']
+      role: ['admin','access-dashboard']
     }
   }
 ];

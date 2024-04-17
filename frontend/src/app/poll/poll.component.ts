@@ -200,4 +200,13 @@ export class PollComponent implements OnInit {
     }
   }
 
+  getText(){
+    if(localStorage.getItem('client-token') && localStorage.getItem('token') && localStorage.getItem('data')){
+      return `Goto Dashboard`
+    }
+    else{
+      return 'Login'
+    }
+  }
+
 }

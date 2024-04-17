@@ -10,7 +10,6 @@ import { EncryptionService } from 'src/app/pages/services/encryption.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-
 export class LoginComponent implements OnInit {
 
   public showPassword: boolean = false;
@@ -20,17 +19,20 @@ export class LoginComponent implements OnInit {
   submitted : boolean = false;
   userData : any;
   appName:any = environment.appName
+
   constructor(public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
     private encrypt:EncryptionService) { }
 
   ngOnInit() {
+    // Initialize the login form with validators
     this.loginForm = this.fb.group({
       email:['',[Validators.required,this.validateEmail]],
       password:['',[Validators.required]]
     })
   }
 
+  // Custom validator function for email format
   validateEmail(c:FormControl): { emailError: { message: string; }; } | null{
     const emailRegex = environment.emailRegex
     return emailRegex.test(c.value)? null : {
@@ -40,8 +42,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
-    public togglePasswordVisibility(): void {
+  // Toggle password visibility
+  public togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
+    // Toggle input type between text and password
     if(this.showPassword){
       document.getElementById("password")?.setAttribute("type","text");
     }
@@ -50,17 +54,21 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // Function to handle login
   login() {
-    this.submitted = true
+    this.submitted = true;
     if(this.loginForm.valid){
+      // If login form is valid, initiate loading
       this.apiService.initiateLoading(true);
       this.apiService.login(this.loginForm.value).subscribe(
       (res : any)=>{
-        console.log(res)
         if (res.status == 200) {
+          // If login is successful
+          // Clear existing tokens and data
           localStorage.removeItem('client-token');
           localStorage.removeItem('token');
           localStorage.removeItem('data');
+          // Set new client token with expiry time
           let now = new Date();
           let time = now.getTime();
           let expireTime = time + 600 * 36000;
@@ -68,6 +76,7 @@ export class LoginComponent implements OnInit {
             key : environment.secretKey,
             time : expireTime
           }
+          // Encrypt and store user data and client token
           let data: any = {
             name : res.data.name,
             email : res.data.email,
@@ -79,6 +88,7 @@ export class LoginComponent implements OnInit {
           this.router.navigateByUrl('/dashboard');
         }
         else if (res.status == 204) {
+          // If login fails due to invalid credentials or invalid username
           let msgData = {
             severity : "error",
             summary : 'Error',
@@ -89,10 +99,12 @@ export class LoginComponent implements OnInit {
         }
       },
       (err:any)=>{
+        // If an error occurs during login
         this.errorMessage = err.error
         console.log(err);
       }
     ).add(()=>{
+      // After login attempt, stop loading and reset error message after 5 seconds
       this.apiService.initiateLoading(false)
       setTimeout(()=>{
         this.errorMessage = null;
@@ -100,6 +112,7 @@ export class LoginComponent implements OnInit {
     })
   }
   else{
+    // If login form is invalid, mark the form controls as dirty
     const controls = this.loginForm.controls;
     for (const name in controls) {
         if (controls[name].invalid) {
@@ -109,4 +122,4 @@ export class LoginComponent implements OnInit {
   }
   }
 
-}
+};
