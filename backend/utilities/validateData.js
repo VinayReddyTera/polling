@@ -1,28 +1,24 @@
-const validate = {}
+const validate = {};
 
-validate.validateEmail=(email)=>{
+// Function to validate email format
+validate.validateEmail = (email) => {
+    // Regular expression to validate email format
     let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    return emailRegex.test(email)? true : false
+    return emailRegex.test(email) ? true : false; // Return true if email matches the regex, otherwise false
 }
 
-validate.validatePhone=(phone)=>{
-    let phoneRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
-    return phoneRegex.test(phone)? true : false
-}
-
-validate.validateName=(name)=>{
+// Function to validate name format
+validate.validateName = (name) => {
+    // Regular expression to validate name format
     let nameRegex = /^[A-Za-z\s'\-]+$/;
-    return nameRegex.test(name)? true : false
+    return nameRegex.test(name) ? true : false; // Return true if name matches the regex, otherwise false
 }
 
-validate.validateTime=(time)=>{
-    let timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-    return timeRegex.test(time)? true : false
-}
-
-validate.validateXss=(data)=>{
+// Function to validate data against XSS (Cross-Site Scripting) attacks
+validate.validateXss = (data) => {
+    // Regular expression to match data without specific characters
     let dataRegex = /^[^<>&'"]*$/;
-    return dataRegex.test(data)
+    return dataRegex.test(data); // Return true if data matches the regex, otherwise false
 }
 
-module.exports = validate
+module.exports = validate;
