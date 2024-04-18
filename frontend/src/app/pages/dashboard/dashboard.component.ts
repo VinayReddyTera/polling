@@ -49,6 +49,7 @@ export class DashboardComponent implements OnInit{
   ngOnInit() {
     // Listen for socket messages, used for live vote counts
     this.socket.on('message', (message) =>{
+      console.log(message)
       if(this.nominees.length>0){
         this.totalCount += 1;
         // Update nominee votes if present in the current list

@@ -28,6 +28,7 @@ io.on('connection', (socket) => {
 
   // Handle 'message' event
   socket.on('message', (message) => {
+    console.log(message)
     io.emit('message', message); // Broadcast the received message to all connected clients
   });
 
