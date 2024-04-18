@@ -103,7 +103,7 @@ userDB.setupData = async () => {
     if(insert.length == setUpData.length){
       let res = {
         status : 200,
-        data : 'Successfully inserted data' // Success message
+        data : insert
       }
       return res; // Return response
     }
@@ -174,11 +174,8 @@ userDB.fetchNominees = async () => {
     return res; // Return response
   }
   else {
-    let res = {
-      status : 204,
-      data : "No Nominees present, contact admin" // Error message
-    }
-    return res; // Return response
+    // if no nominees are present setup nominees
+    return userDB.setupData();
   }
 }
 

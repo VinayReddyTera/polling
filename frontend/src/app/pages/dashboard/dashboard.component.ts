@@ -100,36 +100,36 @@ export class DashboardComponent implements OnInit{
   }
 
   // sets up nominee data, if there is no data in db
-  setupData() {
-    this.apiService.initiateLoading(true)
-    this.apiService.setupdata().subscribe(
-      (res:any)=>{
-        if(res.status == 200){
-          let msgData = {
-            severity : "success",
-            summary : 'Success',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-        }
-        else{
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-        }
-      },
-    (err:any)=>{
-      console.log(err)
-    }
-    ).add(()=>{
-      this.apiService.initiateLoading(false)
-    })
-  }
+  // setupData() {
+  //   this.apiService.initiateLoading(true)
+  //   this.apiService.setupdata().subscribe(
+  //     (res:any)=>{
+  //       if(res.status == 200){
+  //         let msgData = {
+  //           severity : "success",
+  //           summary : 'Success',
+  //           detail : res.data,
+  //           life : 5000
+  //         }
+  //         this.apiService.sendMessage(msgData);
+  //       }
+  //       else{
+  //         let msgData = {
+  //           severity : "error",
+  //           summary : 'Error',
+  //           detail : res.data,
+  //           life : 5000
+  //         }
+  //         this.apiService.sendMessage(msgData);
+  //       }
+  //     },
+  //   (err:any)=>{
+  //     console.log(err)
+  //   }
+  //   ).add(()=>{
+  //     this.apiService.initiateLoading(false)
+  //   })
+  // }
 
   // clears or resets nominee data including votes count to zero.
   clearData(){
