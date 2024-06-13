@@ -11,7 +11,7 @@ declare const $ : any;
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
 
   socket = io(environment.domain);
   name : any;
